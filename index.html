@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>EGX 2019 Program Search</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.8/vue.js"></script>
+  <script src="https://unpkg.com/vuex@2.0.0"></script>
+  <script src="https://unpkg.com/semantic-ui-vue/dist/umd/semantic-ui-vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router"></script>
+  <script src="https://unpkg.com/vuex@2.0.0"></script>
+</head>
+<body>
+  <!-- Main Template-->
+  <div id="app">
+    <transition mode="out-in" name="fade">
+      <div class="ui fluid container">
+          <router-view :key="$route.path"></router-view>
+      </div>
+    </transition>
+  </div>
+  <!-- Index-->
+  <template id="index">
+    <div>
+
+      <div class="ui form">
+        <div class="six fields">
+          <!--- Name --->
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="search icon"></i>
+              <input v-model="searchTitle" type="text" placeholder="Title">
+            </div>
+          </div>
+          <!--- Room Options -->
+          <div class="field">
+            <sui-dropdown :options="roomOptions" 
+                          placeholder="Room" 
+                          v-model="searchRoom"
+                          search selection fluid />
+          </div>
+          <!--- Day Options --->
+          <div class="field">
+            <sui-dropdown :options="dayOptions" 
+                          placeholder="Day"
+                          v-model="searchDay"
+                          search selection fluid />
+          </div>
+          <!--- Start Options --->
+          <div class="field">
+              <sui-dropdown :options="startOptions" 
+                            placeholder="Start Time"
+                            v-model="searchStart"
+                            search selection fluid />
+          </div>
+            
+          <!--- Area Options --->
+          <div class="field">
+            <sui-dropdown :options="areaOptions" 
+                          placeholder="Area"
+                          v-model="searchArea"
+                          search selection fluid />
+          </div>
+          <!--- Age Options --->
+          <div class="field">
+            <sui-dropdown :options="ageOptions"
+                          placeholder="Minimum Age"
+                          v-model="searchAge"
+                          search selection fluid />
+          </div>
+        </div>
+      </div>
+      
+      <sui-dimmer active inverted v-if="isLoading">
+        <sui-loader content="Loading"></sui-loader>
+      </sui-dimmer>
+
+      <div v-if="!isLoading">
+
+      <div class="ui purple message">
+        {{ programs.length }} {{ programs.length == 1 ? "program" : "programs" }} found!
+      </div>
+
+      
+      <transition-group name="list" tag="div" appear>
+        <div class="ui segment" v-for="program in programs" :key="program.id">
+          <div class="ui items">
+            <div class="item">
+              <div class="content">
+                <div class="header">{{ program.title }}</div>
+                <div class="meta">
+                  <div class="ui purple label">
+                    <i class="tag icon"></i>
+                    {{ program.area }}</div>
+                  <div class="ui green label">
+                    <i class="calendar alternate icon"></i>
+                    {{ program.day }} @ {{ program.start }}
+                  </div>
+                  <div class="ui black label">
+                    <i class="map marker alternate icon"></i>
+                    Room {{ program.room }}
+                  </div>
+                  <div class="ui basic purple label">
+                    <i class="child icon"></i>
+                    {{ program.age }}
+                  </div>
+                </div>
+                <div class="description">{{ program.description }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition-group>
+      
+      </div>
+
+    </div>
+  </template>
+  <script src="app.js"></script>
+</body>
+</html>
